@@ -9,6 +9,7 @@ from termcolor import colored, COLORS
 from urllib.parse import urlencode
 import webbrowser
 from config import *
+os.system('color')
 
 TWITCH_CLIENT_ID = 'e0fm2z7ufk73k2jnkm21y0gp1h9q2o'
 COLORS.update({
@@ -106,7 +107,7 @@ def play_url(url, quality=None):
     if quality is None:
         quality = ''
 
-    command = 'streamlink {} {}'.format(url, quality)
+    command = 'streamlink {} {} {}'.format(url, quality, "--twitch-disable-ads")
     process = subprocess.Popen(command.split(), stdout=None, stderr=None)
     output, error = process.communicate()
 
@@ -326,13 +327,13 @@ def get_channel_id(name):
 
 def authenticate():
     query = {
+        'response_type': 'token',
         'client_id': TWITCH_CLIENT_ID,
         'redirect_uri': 'https://butt4cak3.github.io/twitch-cli/oauth.html',
-        'response_type': 'token',
-        'scope': 'user_follows_edit'
+        'scope': 'user:edit:follows'
     }
-    url = ('https://api.twitch.tv/kraken/oauth2/authorize/?{}'
-           .format(urlencode(query)))
+    url = ('https://id.twitch.tv/oauth2/authorize?{}'
+           .format(urlencode(query, safe=':/-')))
 
     try:
         if not webbrowser.open_new_tab(url):
