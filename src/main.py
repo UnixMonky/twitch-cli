@@ -159,7 +159,7 @@ def list_streams(game=None, flat=False, playback_quality=None):
     if not (0 < selection <= len(streams)):
         return
 
-    play_stream(streams[selection - 1]['channel']['name'], quality=playback_quality)
+    play_stream(streams[selection - 1]['user_name'], quality=playback_quality)
 
 def get_followed_streams():
     config = get_config()
