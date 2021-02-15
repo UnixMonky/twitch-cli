@@ -80,7 +80,7 @@ def cmd_auth(force):
     """Authenticate with Twitch"""
     config = get_config()
     if (config['oauth'] != '') and (not force):
-        print('You are already authenticated.')
+        print('You are already authenticated.' + config['oauth'])
         return
 
     token = authenticate()
@@ -135,7 +135,7 @@ def list_streams(game=None, flat=False, playback_quality=None):
     if game is not None:
         streams = get_game_streams(game)
     else:
-        streams = get_followed_streams()
+        streams = helix_get_streams()
 
     if streams is None:
         print('Something went wrong while trying to fetch data from the '
@@ -241,15 +241,15 @@ def print_stream_list(streams, title=None, flat=False):
         print('')
 
     if flat:
-        format = '{1[channel][name]}'
+        format = '{1[user_name]}'
     else:
         ind_len = len(str(len(streams)))
         bullet          = '{0: >' + str(ind_len + 2) + 's}'
-        display_name    = '{1[channel][display_name]}'
-        status          = '{1[channel][status]}'
+        display_name    = '{1[user_name]}'
+        status          = '{1[title]}'
         #channel_name    = '{1[channel][name]}'
-        game            = '{1[channel][game]}'
-        viewers         = '[{1[viewers]} viewers]'
+        game            = '{1[game_name]}'
+        viewers         = '[{1[viewer_count]} viewers]'
         format = (colored(bullet + ' ',         'light_red')
                 + colored(display_name + ': ',  'light_blue', attrs=['bold'])
                 + colored(game + ' ',           'light_yellow')
@@ -311,9 +311,10 @@ def unfollow_channel(channel):
     print('You don\'t follow {} anymore'.format(channel))
 
 def get_own_channel_id():
-    url = ''
-    response = twitchapi_request(url)
-    return response['token']['user_id']
+    url = 'users'
+    response = helixapi_request(url)
+
+    return response['data'][0]['id']
 
 def get_channel_id(name):
     query = { 'login': name }
@@ -324,6 +325,44 @@ def get_channel_id(name):
         return None
 
     return response['users'][0]['_id']
+
+def helix_user_follows():
+    config = get_config()
+    own = get_own_channel_id()
+
+    url = 'https://api.twitch.tv/helix/users/follows?from_id={}&first=100' .format(int(own))
+    headers = {
+        'client-id': TWITCH_CLIENT_ID,
+        'Authorization': 'Bearer {}'.format(config['oauth'])
+    }
+    request = requests.get(url, headers=headers)
+    response = request.json()
+
+    if response['total'] == 0:
+        return None
+
+    ids=''
+    for id_ in response['data']:
+        ids = ids + 'user_id=' + id_['to_id'] + '&'
+
+    return ids[:-1]
+
+def helix_get_streams():
+    config = get_config()
+    user_follows = helix_user_follows()
+
+    url = 'https://api.twitch.tv/helix/streams?{}' .format(user_follows)
+    headers = {
+        'client-id': TWITCH_CLIENT_ID,
+        'Authorization': 'Bearer {}'.format(config['oauth'])
+    }
+    request = requests.get(url, headers=headers)
+    response = request.json()
+
+    if 'user_name' not in response['data'][0]:
+        return None
+
+    return response['data']
 
 def authenticate():
     query = {
@@ -355,6 +394,29 @@ def twitchapi_request(url, method='get'):
         'Accept': 'application/vnd.twitchtv.v5+json',
         'Client-ID': TWITCH_CLIENT_ID,
         'Authorization': 'OAuth {}'.format(config['oauth'])
+    }
+    if method == 'get':
+        request = requests.get(url, headers=headers)
+    elif method == 'put':
+        request = requests.put(url, headers=headers)
+    elif method == 'delete':
+        request = requests.delete(url, headers=headers)
+
+    try:
+        data = request.json()
+    except:
+        print(request.text)
+        return None
+
+    return data
+
+def helixapi_request(url, method='get'):
+    config = get_config()
+
+    url = 'https://api.twitch.tv/helix/' + url
+    headers = {
+        'Client-ID': TWITCH_CLIENT_ID,
+        'Authorization': 'Bearer {}'.format(config['oauth'])
     }
     if method == 'get':
         request = requests.get(url, headers=headers)
