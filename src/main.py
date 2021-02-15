@@ -80,7 +80,7 @@ def cmd_auth(force):
     """Authenticate with Twitch"""
     config = get_config()
     if (config['oauth'] != '') and (not force):
-        print('You are already authenticated.' + config['oauth'])
+        print('You are already authenticated.')
         return
 
     token = authenticate()
