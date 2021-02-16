@@ -293,8 +293,10 @@ def follow_channel(channel):
         print('The channel "{}" does not exist'.format(channel))
         return
 
-    url = 'users/{}/follows/channels/{}'.format(own_id, channel_id)
-    response = twitchapi_request(url, method='put')
+    data = '{{"from_id": "{}","to_id": "{}"}}' .format(own_id, channel_id)
+
+    url = 'users/follows'
+    response = helixapi_request(url, method='post', data=data)
     print('You now follow {}'.format(channel))
 
 def unfollow_channel(channel):
@@ -305,8 +307,13 @@ def unfollow_channel(channel):
         print('The channel "{}" does not exist'.format(channel))
         return
 
-    url = 'users/{}/follows/channels/{}'.format(own_id, channel_id)
-    response = twitchapi_request(url, method='delete')
+    query = {
+        'from_id' : own_id,
+        'to_id' : channel_id
+    }
+    url = 'users/follows?{}'.format(urlencode(query))
+    response = helixapi_request(url, method='delete')
+
     print('You don\'t follow {} anymore'.format(channel))
 
 def get_own_channel_id():
@@ -434,18 +441,19 @@ def twitchapi_request(url, method='get'):
 
     return data
 
-def helixapi_request(url, method='get'):
+def helixapi_request(url, method='get', data=None):
     config = get_config()
 
     url = 'https://api.twitch.tv/helix/' + url
     headers = {
-        'Client-ID': TWITCH_CLIENT_ID,
-        'Authorization': 'Bearer {}'.format(config['oauth'])
+        'Authorization': 'Bearer {}'.format(config['oauth']),
+        'Client-ID': TWITCH_CLIENT_ID
     }
     if method == 'get':
         request = requests.get(url, headers=headers)
-    elif method == 'put':
-        request = requests.put(url, headers=headers)
+    elif method == 'post':
+        headers['Content-Type'] = 'application/json'
+        request = requests.post(url, headers=headers, data=data)
     elif method == 'delete':
         request = requests.delete(url, headers=headers)
 
