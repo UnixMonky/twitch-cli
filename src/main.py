@@ -248,7 +248,6 @@ def print_stream_list(streams, title=None, flat=False):
         bullet          = '{0: >' + str(ind_len + 2) + 's}'
         display_name    = '{1[user_name]}'
         status          = '{1[title]}'
-        #channel_name    = '{1[channel][name]}'
         game            = '{1[game_name]}'
         viewers         = '[{1[viewer_count]} viewers]'
         format = (colored(bullet + ' ',         'light_red')
