@@ -274,11 +274,14 @@ def print_vod_list(vods, title=None, flat=False):
         ind_len = len(str(len(vods)))
         bullet  = '{0: >' + str(ind_len + 2) + 's}'
         title   = '{1[title]}'
+        duration= 'Duration: {1[duration]}'
         date    = 'Recorded: {1[created_at]}'
-        format = (colored(bullet + ' ',     'light_red')
-                + colored(title + '\n',     'light_blue', attrs=['bold'])
+        format = (colored(bullet + ' ',      'light_red')
+                + colored(title + '\n',      'light_blue', attrs=['bold'])
                 + (' ' * (ind_len + 3))
-                + colored(date + '\n',      'light_grey'))
+                + colored(date + '\n',       'light_grey',)
+                + (' ' * (ind_len + 3))
+                + colored(duration + '\n',   'light_grey'))
 
         i = 1
         for vod in vods:
