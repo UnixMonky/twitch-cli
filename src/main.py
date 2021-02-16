@@ -216,24 +216,25 @@ def list_vods(channel, flat, playback_quality=None):
 
 def get_channel_vods(channel):
     config = get_config()
-    channel_id = get_channel_id(channel)
+    user_id = get_channel_id(channel)
 
-    if channel_id is None:
+    if user_id is None:
         print('The channel "{}" does not exist'.format(channel))
         return
 
-    url = 'https://api.twitch.tv/kraken/channels/{}/videos?broadcast_type=archive'.format(channel_id)
+    query = { 'user_id' : user_id }
+    url = 'https://api.twitch.tv/helix/videos?{}'.format(urlencode(query))
     headers = {
-        'Accept': 'application/vnd.twitchtv.v5+json',
-        'Authorization': 'OAuth {}'.format(config['oauth'])
+        'client-id': TWITCH_CLIENT_ID,
+        'Authorization': 'Bearer {}'.format(config['oauth'])
     }
     request = requests.get(url, headers=headers)
     response = request.json()
 
-    if 'videos' not in response:
+    if 'data' not in response:
         return None
 
-    return response['videos']
+    return response['data']
 
 def print_stream_list(streams, title=None, flat=False):
     if title and not flat:
@@ -272,12 +273,10 @@ def print_vod_list(vods, title=None, flat=False):
     else:
         ind_len = len(str(len(vods)))
         bullet  = '{0: >' + str(ind_len + 2) + 's}'
-        game    = '{1[game]}'
         title   = '{1[title]}'
         date    = 'Recorded: {1[created_at]}'
         format = (colored(bullet + ' ',     'light_red')
-                + colored(game + ': ',      'light_blue', attrs=['bold'])
-                + colored(title + '\n',     'light_yellow')
+                + colored(title + '\n',     'light_blue', attrs=['bold'])
                 + (' ' * (ind_len + 3))
                 + colored(date + '\n',      'light_grey'))
 
@@ -319,12 +318,12 @@ def get_own_channel_id():
 def get_channel_id(name):
     query = { 'login': name }
     url = 'users?{}'.format(urlencode(query))
-    response = twitchapi_request(url)
+    response = helixapi_request(url)
 
-    if response['_total'] == 0:
+    if response['data'][0]['created_at'] is None:
         return None
 
-    return response['users'][0]['_id']
+    return response['data'][0]['id']
 
 def helix_user_follows():
     config = get_config()
