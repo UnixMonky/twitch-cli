@@ -404,7 +404,7 @@ def authenticate():
             raise webbrowser.Error
     except webbrowser.Error:
         print('Couldn\'t open a browser. Open this URL in your browser to '
-              'continue:')
+              'continue: ')
         print(url)
         return
 
