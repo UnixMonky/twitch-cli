@@ -161,39 +161,6 @@ def list_streams(game=None, flat=False, playback_quality=None):
 
     play_stream(streams[selection - 1]['user_name'], quality=playback_quality)
 
-def get_followed_streams():
-    config = get_config()
-
-    url = 'https://api.twitch.tv/kraken/streams/followed'
-    headers = {
-        'Accept': 'application/vnd.twitchtv.v5+json',
-        'Authorization': 'OAuth {}'.format(config['oauth'])
-    }
-    request = requests.get(url, headers=headers)
-    response = request.json()
-
-    if 'streams' not in response:
-        return None
-
-    return response['streams']
-
-def get_game_streams(game):
-    config = get_config()
-
-    query = { 'game': game }
-    url = 'https://api.twitch.tv/kraken/streams/?{}'.format(urlencode(query))
-    headers = {
-        'Accept': 'application/vnd.twitchtv.v5+json',
-        'Authorization': 'OAuth {}'.format(config['oauth'])
-    }
-    request = requests.get(url, headers=headers)
-    response = request.json()
-
-    if 'streams' not in response:
-        return None
-
-    return response['streams']
-
 def list_vods(channel, flat, playback_quality=None):
     vods = get_channel_vods(channel)
 
@@ -418,30 +385,6 @@ def authenticate():
 
     token = input('OAuth token: ')
     return token.strip()
-
-def twitchapi_request(url, method='get'):
-    config = get_config()
-
-    url = 'https://api.twitch.tv/kraken/' + url
-    headers = {
-        'Accept': 'application/vnd.twitchtv.v5+json',
-        'Client-ID': TWITCH_CLIENT_ID,
-        'Authorization': 'OAuth {}'.format(config['oauth'])
-    }
-    if method == 'get':
-        request = requests.get(url, headers=headers)
-    elif method == 'put':
-        request = requests.put(url, headers=headers)
-    elif method == 'delete':
-        request = requests.delete(url, headers=headers)
-
-    try:
-        data = request.json()
-    except:
-        print(request.text)
-        return None
-
-    return data
 
 def helixapi_request(url, method='get', data=None):
     config = get_config()
