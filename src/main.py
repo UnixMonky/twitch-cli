@@ -133,7 +133,7 @@ def list_streams(game=None, flat=False, playback_quality=None):
         sys.exit(1)
 
     if game is not None:
-        streams = get_game_streams(game)
+        streams = helix_get_streams(game)
     else:
         streams = helix_get_streams()
 
@@ -347,11 +347,12 @@ def helix_user_follows():
 
     return ids[:-1]
 
-def helix_get_streams():
+def helix_get_streams(game=''):
     config = get_config()
+    games = helix_get_games(game)
     user_follows = helix_user_follows()
 
-    url = 'https://api.twitch.tv/helix/streams?{}' .format(user_follows)
+    url = 'https://api.twitch.tv/helix/streams?{}' .format(user_follows + games)
     headers = {
         'client-id': TWITCH_CLIENT_ID,
         'Authorization': 'Bearer {}'.format(config['oauth'])
@@ -363,6 +364,30 @@ def helix_get_streams():
         return None
 
     return response['data']
+
+def helix_get_games(game=''):
+    if game == '':
+        return ''
+
+    config = get_config()
+
+    query = { 'query': game }
+    url = 'https://api.twitch.tv/helix/search/categories?{}' .format(urlencode(query))
+    headers = {
+        'client-id': TWITCH_CLIENT_ID,
+        'Authorization': 'Bearer {}'.format(config['oauth'])
+    }
+    request = requests.get(url, headers=headers)
+    response = request.json()
+
+    if 'name' not in response['data'][0]:
+        return None
+
+    ids=''
+    for id_ in response['data']:
+        ids = ids + 'game_id=' + id_['id'] + '&'
+
+    return ids[:-1]
 
 def authenticate():
     query = {
