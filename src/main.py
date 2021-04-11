@@ -8,6 +8,7 @@ import click
 from termcolor import colored, COLORS
 from urllib.parse import urlencode
 import webbrowser
+import numpy as np
 from config import *
 os.system('color')
 
@@ -335,6 +336,10 @@ def helix_get_streams(game=''):
     request = requests.get(url, headers=headers)
     response = request.json()
 
+    flag = not np.any(response['data'])
+    if flag:
+         return None
+         
     if 'user_name' not in response['data'][0]:
         return None
 
@@ -354,6 +359,10 @@ def helix_get_games(game=''):
     }
     request = requests.get(url, headers=headers)
     response = request.json()
+
+    flag = not np.any(response['data'])
+    if flag:
+        return None
 
     if 'name' not in response['data'][0]:
         return None
