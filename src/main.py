@@ -290,6 +290,11 @@ def get_own_channel_id():
     url = 'users'
     response = helixapi_request(url)
 
+    flag = not np.any(response['data'])
+    if flag:
+        print("OAuth Token expired.  Run 'auth --force' to generate a new one.")
+        return None
+
     return response['data'][0]['id']
 
 def get_channel_id(name):
