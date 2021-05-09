@@ -108,7 +108,7 @@ def play_url(url, quality=None):
     if quality is None:
         quality = ''
 
-    command = 'streamlink {} {} {}'.format(url, quality, "--twitch-disable-ads")
+    command = 'streamlink {} {} {}'.format(url, quality, "--twitch-disable-ads --player-passthrough=hls")
     process = subprocess.Popen(command.split(), stdout=None, stderr=None)
     output, error = process.communicate()
 
