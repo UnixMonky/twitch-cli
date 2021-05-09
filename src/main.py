@@ -338,7 +338,8 @@ def helix_get_streams(game=''):
 
     flag = not np.any(response['data'])
     if flag:
-         return None
+         print("No followed streamers are live.")
+         sys.exit(1)
          
     if 'user_name' not in response['data'][0]:
         return None
@@ -417,7 +418,13 @@ def helixapi_request(url, method='get', data=None):
         print(request.text)
         return None
 
-    return data
+    try:
+        data['status'] == 401
+    except KeyError:
+        return data
+
+    print("OAuth Token has expired.  Please run 'auth --force' to generate a new one.")
+    sys.exit(1)
 
 if __name__ == '__main__':
     main()
