@@ -63,17 +63,17 @@ def cmd_play(channel, quality):
     """Play a livestream"""
     play_stream(channel, quality=quality)
 
-@main.command('follow')
-@click.argument('channel')
-def cmd_follow(channel):
-    """Follow a channel"""
-    follow_channel(channel)
+# @main.command('follow')
+# @click.argument('channel')
+# def cmd_follow(channel):
+#     """Follow a channel"""
+#     follow_channel(channel)
 
-@main.command('unfollow')
-@click.argument('channel')
-def cmd_unfollow(channel):
-    """Unfollow a channel"""
-    unfollow_channel(channel)
+# @main.command('unfollow')
+# @click.argument('channel')
+# def cmd_unfollow(channel):
+#     """Unfollow a channel"""
+#     unfollow_channel(channel)
 
 @main.command('auth')
 @click.option('--force', '-f', is_flag=True, help='Overwrite existing OAuth token')
@@ -255,36 +255,36 @@ def print_vod_list(vods, title=None, flat=False):
             print(format.format('[' + str(i) + ']', vod))
             i += 1
 
-def follow_channel(channel):
-    own_id = get_own_channel_id()
-    channel_id = get_channel_id(channel)
+# def follow_channel(channel):
+#     own_id = get_own_channel_id()
+#     channel_id = get_channel_id(channel)
 
-    if channel_id is None:
-        print('The channel "{}" does not exist'.format(channel))
-        return
+#     if channel_id is None:
+#         print('The channel "{}" does not exist'.format(channel))
+#         return
 
-    data = '{{"from_id": "{}","to_id": "{}"}}' .format(own_id, channel_id)
+#     data = '{{"from_id": "{}","to_id": "{}"}}' .format(own_id, channel_id)
 
-    url = 'users/follows'
-    response = helixapi_request(url, method='post', data=data)
-    print('You now follow {}'.format(channel))
+#     url = 'users/follows'
+#     response = helixapi_request(url, method='post', data=data)
+#     print('You now follow {}'.format(channel))
 
-def unfollow_channel(channel):
-    own_id = get_own_channel_id()
-    channel_id = get_channel_id(channel)
+# def unfollow_channel(channel):
+#     own_id = get_own_channel_id()
+#     channel_id = get_channel_id(channel)
 
-    if channel_id is None:
-        print('The channel "{}" does not exist'.format(channel))
-        return
+#     if channel_id is None:
+#         print('The channel "{}" does not exist'.format(channel))
+#         return
 
-    query = {
-        'from_id' : own_id,
-        'to_id' : channel_id
-    }
-    url = 'users/follows?{}'.format(urlencode(query))
-    response = helixapi_request(url, method='delete')
+#     query = {
+#         'from_id' : own_id,
+#         'to_id' : channel_id
+#     }
+#     url = 'users/follows?{}'.format(urlencode(query))
+#     response = helixapi_request(url, method='delete')
 
-    print('You don\'t follow {} anymore'.format(channel))
+#     print('You don\'t follow {} anymore'.format(channel))
 
 def get_own_channel_id():
     url = 'users'
