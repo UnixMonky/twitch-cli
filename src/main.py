@@ -255,37 +255,6 @@ def print_vod_list(vods, title=None, flat=False):
             print(format.format('[' + str(i) + ']', vod))
             i += 1
 
-# def follow_channel(channel):
-#     own_id = get_own_channel_id()
-#     channel_id = get_channel_id(channel)
-
-#     if channel_id is None:
-#         print('The channel "{}" does not exist'.format(channel))
-#         return
-
-#     data = '{{"from_id": "{}","to_id": "{}"}}' .format(own_id, channel_id)
-
-#     url = 'users/follows'
-#     response = helixapi_request(url, method='post', data=data)
-#     print('You now follow {}'.format(channel))
-
-# def unfollow_channel(channel):
-#     own_id = get_own_channel_id()
-#     channel_id = get_channel_id(channel)
-
-#     if channel_id is None:
-#         print('The channel "{}" does not exist'.format(channel))
-#         return
-
-#     query = {
-#         'from_id' : own_id,
-#         'to_id' : channel_id
-#     }
-#     url = 'users/follows?{}'.format(urlencode(query))
-#     response = helixapi_request(url, method='delete')
-
-#     print('You don\'t follow {} anymore'.format(channel))
-
 def get_own_channel_id():
     url = 'users'
     response = helixapi_request(url)
