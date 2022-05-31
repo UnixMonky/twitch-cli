@@ -106,11 +106,11 @@ def get_available_streams(url):
 
 def play_url(url, quality=None):
     if quality is None:
-        quality = ''
+        quality = 'best'
 
     command = 'streamlink {} {}'.format(url, quality)
     process = subprocess.Popen(command.split(), stdout=None, stderr=None)
-    output, error = process.communicate()
+    # output, error = process.communicate() ## comment this so streamlink spawns in the background
 
 def play_stream(channel, quality=None):
     """Load a stream and open the player"""
