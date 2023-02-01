@@ -12,7 +12,7 @@ import numpy as np
 from config import *
 os.system('color')
 
-TWITCH_CLIENT_ID = 'e0fm2z7ufk73k2jnkm21y0gp1h9q2o'
+TWITCH_CLIENT_ID = 'ro0mqnl1l14arp7f9giidle02mr9cp'
 COLORS.update({
     'light_grey': 90,
     'light_red': 91,
