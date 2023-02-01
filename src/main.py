@@ -347,7 +347,7 @@ def authenticate():
     query = {
         'response_type': 'token',
         'client_id': TWITCH_CLIENT_ID,
-        'redirect_uri': 'https://butt4cak3.github.io/twitch-cli/oauth.html',
+        'redirect_uri': 'https://dynamitejustice.github.io/twitch-cli/oauth.html',
         'scope': 'user:edit:follows'
     }
     url = ('https://id.twitch.tv/oauth2/authorize?{}'
