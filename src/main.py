@@ -12,7 +12,7 @@ import numpy as np
 from config import *
 os.system('color')
 
-TWITCH_CLIENT_ID = 'e0fm2z7ufk73k2jnkm21y0gp1h9q2o'
+TWITCH_CLIENT_ID = 'ro0mqnl1l14arp7f9giidle02mr9cp'
 COLORS.update({
     'light_grey': 90,
     'light_red': 91,
@@ -275,7 +275,7 @@ def helix_user_follows():
     config = get_config()
     own = get_own_channel_id()
 
-    url = 'https://api.twitch.tv/helix/users/follows?from_id={}&first=100' .format(int(own))
+    url = 'https://api.twitch.tv/helix/channels/followed?user_id={}&first=100' .format(int(own))
     headers = {
         'client-id': TWITCH_CLIENT_ID,
         'Authorization': 'Bearer {}'.format(config['oauth'])
@@ -288,7 +288,7 @@ def helix_user_follows():
 
     ids=''
     for id_ in response['data']:
-        ids = ids + 'user_id=' + id_['to_id'] + '&'
+        ids = ids + 'user_id=' + id_['broadcaster_id'] + '&'
 
     return ids[:-1]
 
@@ -347,8 +347,8 @@ def authenticate():
     query = {
         'response_type': 'token',
         'client_id': TWITCH_CLIENT_ID,
-        'redirect_uri': 'https://butt4cak3.github.io/twitch-cli/oauth.html',
-        'scope': 'user:edit:follows'
+        'redirect_uri': 'https://dynamitejustice.github.io/twitch-cli/oauth.html',
+        'scope': 'user:read:follows'
     }
     url = ('https://id.twitch.tv/oauth2/authorize?{}'
            .format(urlencode(query, safe=':/-')))
