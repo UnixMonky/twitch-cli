@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Python",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                // "debug_hell.app:app",
+                // "--reload",
+                // "--host",
+                // "0.0.0.0",
+                // "--port",
+                // "8001"
+            ],
+            // "env": {
+            //     "DATABASE_URL": "postgresql+asyncpg://postgres:postgres@localhost:5432/debug_hell"
+            // },
+            // "justMyCode": false
+        }
+    ]
+}
