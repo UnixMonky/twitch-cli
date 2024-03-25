@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import os
+# import os
 import sys
 import requests
 import subprocess
@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 import webbrowser
 import numpy as np
 from config import *
-os.system('color')
+# os.system('color')
 
 TWITCH_CLIENT_ID = 'ro0mqnl1l14arp7f9giidle02mr9cp'
 COLORS.update({
@@ -309,7 +309,7 @@ def helix_get_streams(game=''):
     if flag:
          print("No followed streamers are live.")
          sys.exit(1)
-         
+
     if 'user_name' not in response['data'][0]:
         return None
 
